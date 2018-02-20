@@ -77,4 +77,23 @@ export class LoginComponent implements OnInit {
       });
     });
   }
+  
+  registerPlayer() {
+    let ngZone = this.ngZone;
+    let router = this.router;
+    let username = $('#username').val();
+    console.log(`username is: ${username}`);
+    if (username.length === 0) {
+      alert('Please enter a username');
+    } else if (username.length < 2) {
+      alert('Username must be at least 2 charaters long.');
+    } else {
+      // TODO: pick up hostnames/ports for services from env variables instead of hardcoding to localhost 
+      $.get(`http://${document.location.hostname}:8081/player-service/create?playerName=${username}`, 
+        function(data) {
+          console.log(`Registered a player with id=${data}`);
+        }
+      );
+    }
+  }
 }
