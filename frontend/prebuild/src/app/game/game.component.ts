@@ -11,6 +11,8 @@ import { GameService } from './game.service';
 })
 export class GameComponent implements OnInit {
   static readonly BOX_SIZE = 5;
+  static readonly PLAYER_WIDTH = 15;
+  static readonly PLAYER_HEIGHT = 15;
 
   roundId: string;
   serverHost: string;
@@ -18,6 +20,10 @@ export class GameComponent implements OnInit {
 
   output: HTMLElement;
   idDisplay: HTMLElement;
+  bluePlayer: HTMLImageElement;
+  orangePlayer: HTMLImageElement;
+  redPlayer: HTMLImageElement;
+  yellowPlayer: HTMLImageElement;
 
   canvas: any;
   context: CanvasRenderingContext2D;
@@ -78,6 +84,15 @@ export class GameComponent implements OnInit {
 
     this.output = document.getElementById('output');
     this.idDisplay = document.getElementById('gameIdDisplay');
+    
+    this.bluePlayer = new Image(GameComponent.PLAYER_WIDTH, GameComponent.PLAYER_HEIGHT);
+    this.bluePlayer.src = '/assets/images/player_blue.png';
+    this.orangePlayer = new Image(GameComponent.PLAYER_WIDTH, GameComponent.PLAYER_HEIGHT);
+    this.orangePlayer.src = '/assets/images/player_orange.png';
+    this.redPlayer = new Image(GameComponent.PLAYER_WIDTH, GameComponent.PLAYER_HEIGHT);
+    this.redPlayer.src = '/assets/images/player_red.png';
+    this.yellowPlayer = new Image(GameComponent.PLAYER_WIDTH, GameComponent.PLAYER_HEIGHT);
+    this.yellowPlayer.src = '/assets/images/player_yellow.png';
 
     this.canvas = document.getElementById('gameCanvas');
     this.context = this.canvas.getContext('2d');
@@ -124,19 +139,22 @@ export class GameComponent implements OnInit {
 
   // Update display
   drawPlayer(player) {
-    this.context.fillStyle = player.color;
+    this.context.fillStyle = this.playerHtmlColor(player);
+    // Clear the previous player location
     this.context.clearRect(GameComponent.BOX_SIZE * player.oldX, GameComponent.BOX_SIZE * player.oldY,
-                          GameComponent.BOX_SIZE * player.width, GameComponent.BOX_SIZE * player.height);
-    this.context.fillRect(GameComponent.BOX_SIZE * player.x, GameComponent.BOX_SIZE * player.y,
-                          GameComponent.BOX_SIZE * player.width, GameComponent.BOX_SIZE * player.height);
+                          GameComponent.PLAYER_WIDTH, GameComponent.PLAYER_HEIGHT);
+    
+    // Draw the player trail
     this.context.fillRect(GameComponent.BOX_SIZE * player.trailPosX, GameComponent.BOX_SIZE * player.trailPosY,
                           GameComponent.BOX_SIZE, GameComponent.BOX_SIZE);
     this.context.fillRect(GameComponent.BOX_SIZE * player.trailPosX2, GameComponent.BOX_SIZE * player.trailPosY2,
                           GameComponent.BOX_SIZE, GameComponent.BOX_SIZE);
-    this.context.fillStyle = '#e8e5e5';
-    this.context.fillRect(GameComponent.BOX_SIZE * player.x + player.width / 4 * GameComponent.BOX_SIZE, 
-                          GameComponent.BOX_SIZE * player.y + player.height / 4 * GameComponent.BOX_SIZE,
-                          GameComponent.BOX_SIZE * (player.width / 2), GameComponent.BOX_SIZE * (player.height / 2));  
+    
+    // Draw the player
+    //this.context.save();
+    //this.context.rotate(90*Math.PI/180);
+    this.context.drawImage(this.playerImage(player), GameComponent.BOX_SIZE * player.x, GameComponent.BOX_SIZE * player.y);
+    //this.context.restore();
   }
 
   drawObstacle(obstacle) {
@@ -153,6 +171,28 @@ export class GameComponent implements OnInit {
     }
     this.context.fillRect(GameComponent.BOX_SIZE * obstacle.x, GameComponent.BOX_SIZE * obstacle.y,
                           GameComponent.BOX_SIZE * obstacle.width, GameComponent.BOX_SIZE * obstacle.height);
+  }
+  
+  playerImage(player) {
+	  if (player.color === 'blue')
+		  return this.bluePlayer;
+	  if (player.color === 'orange')
+		  return this.orangePlayer;
+	  if (player.color === 'red')
+		  return this.redPlayer;
+	  if (player.color === 'yellow')
+		  return this.yellowPlayer;
+  }
+  
+  playerHtmlColor(player) {
+	  if (player.color === 'orange')
+		  return '#DF740C';
+	  if (player.color === 'blue')
+		  return '#6FC3DF';
+	  if (player.color === 'red')
+		  return '#FF0000';
+	  if (player.color === 'yellow')
+		  return '#FFE64D';
   }
 
   writeToScreen(message: string) {

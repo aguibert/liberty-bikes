@@ -19,7 +19,8 @@ export class PlayerListComponent implements OnInit {
         console.log(`Got ${JSON.stringify(json.playerlist)}`);
         for (let player of json.playerlist) {
           console.log(`Adding player ${player.name}`);
-          newPlayers.push(new Player(player.name, player.status, player.color));
+          
+          newPlayers.push(new Player(player.name, player.status, this.playerHtmlColor(player)));
         }
         this.ngZone.run(() => {
           this.players = newPlayers;
@@ -32,5 +33,16 @@ export class PlayerListComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+  
+  playerHtmlColor(player) {
+	  if (player.color === 'orange')
+		  return '#DF740C';
+	  if (player.color === 'blue')
+		  return '#6FC3DF';
+	  if (player.color === 'red')
+		  return '#FF0000';
+	  if (player.color === 'yellow')
+		  return '#FFE64D';
   }
 }

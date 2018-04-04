@@ -21,10 +21,10 @@ public class Player {
     }
 
     private static enum PlayerStartingData {
-        START_1("#DF740C", 9, 9, DIRECTION.RIGHT),
-        START_2("#FF0000", GameBoard.BOARD_SIZE - 11, 9, DIRECTION.DOWN),
-        START_3("#6FC3DF", 9, GameBoard.BOARD_SIZE - 11, DIRECTION.UP),
-        START_4("#FFE64D", GameBoard.BOARD_SIZE - 11, GameBoard.BOARD_SIZE - 11, DIRECTION.LEFT);
+        START_1("blue", 9, 9, DIRECTION.RIGHT),
+        START_2("red", GameBoard.BOARD_SIZE - 11, 9, DIRECTION.DOWN),
+        START_3("orange", 9, GameBoard.BOARD_SIZE - 11, DIRECTION.UP),
+        START_4("yellow", GameBoard.BOARD_SIZE - 11, GameBoard.BOARD_SIZE - 11, DIRECTION.LEFT);
 
         public final String color;
         public final int x;
