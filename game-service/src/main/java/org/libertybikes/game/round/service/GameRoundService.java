@@ -1,14 +1,21 @@
 package org.libertybikes.game.round.service;
 
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,6 +35,11 @@ public class GameRoundService {
     ManagedScheduledExecutorService exec;
 
     private final Map<String, GameRound> allRounds = new ConcurrentHashMap<>();
+
+    @PostConstruct
+    public void initService() {
+        trustAllCertificates();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,6 +119,33 @@ public class GameRoundService {
             allRounds.remove(roundId);
             System.out.println("Deleted round id=" + roundId);
         }, 5, TimeUnit.MINUTES);
+    }
+
+    // TODO: For now we will trust all self-signed certificates
+    private static void trustAllCertificates() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+        } };
+
+        try {
+            System.out.println("@AGG default SSLContext is: " + SSLContext.getDefault().getProtocol());
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            System.out.println("Unable to install custom SSL socket factory to trust self-signed certificates");
+            e.printStackTrace();
+        }
+        System.out.println("Installed no-op TrustManager");
     }
 
 }
