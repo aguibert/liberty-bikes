@@ -8,7 +8,6 @@
         <feature>jsonb-1.0</feature>
         <feature>mpConfig-1.2</feature>
         <feature>mpRestClient-1.0</feature>
-        <feature>mpJwt-1.0</feature>
         <feature>mpOpenAPI-1.0</feature>
         <feature>websocket-1.1</feature>
     </featureManager>
@@ -23,7 +22,6 @@
     <jndiEntry jndiName="jwtKeyStorePassword" value="secret2"/> 
     <jndiEntry jndiName="jwtKeyStoreAlias" value="bike2"/> 
    
-                  
     <applicationManager autoExpand="true"/>
     
     <sslDefault sslRef="RpSSLConfig" />  
