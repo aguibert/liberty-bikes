@@ -120,7 +120,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     // Delay to give users enough time to read the check text
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    let data: any = await this.http.get(`${environment.API_URL_AUTH}/auth-service`).toPromise();
+    let data: any = await this.http.get(`${environment.API_URL_AUTH}/auth-service`, '', { responseType: 'json' }).toPromise();
     if (data == null) {
       console.log('WARNING: Unable to contact auth service to determine SSO options');
       this.ngZone.run(() => {
@@ -151,7 +151,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let data: any = await this.http.get(`${environment.API_URL_PARTY}/describe`).toPromise();
+    let data: any = await this.http.get(`${environment.API_URL_PARTY}/describe`, '', { responseType: 'json' }).toPromise();
     if (data == null) {
       console.log('WARNING: Unable to contact party service to determine if single party mode is enabled');
       return;
@@ -208,7 +208,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     try {
-      let data: any = await this.http.get(`${environment.API_URL_GAME_ROUND}/${roundID}`).toPromise();
+      let data: any = await this.http.get(`${environment.API_URL_GAME_ROUND}/${roundID}`, '', { responseType: 'json' }).toPromise();
       console.log(JSON.stringify(data));
       if (data === null) {
         alert('Game round does not exist!');
