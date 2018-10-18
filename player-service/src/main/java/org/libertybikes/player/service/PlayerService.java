@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.libertybikes.player.data.PlayerDB;
 
 @Path("/player")
@@ -64,6 +65,7 @@ public class PlayerService {
     }
 
     @GET
+    @Operation(hidden = true)
     @Path("/getJWTInfo")
     public HashMap<String, String> getJWTInfo() {
 
