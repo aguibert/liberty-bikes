@@ -2,6 +2,7 @@ package org.libertybikes.restclient;
 
 import javax.enterprise.context.Dependent;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,6 +27,6 @@ public interface PlayerService {
     @POST
     @Path("/rank/{playerId}")
     @Operation(hidden = true) // hide operation from OpenAPI
-    public void recordGame(@PathParam("playerId") String id, @QueryParam("place") int place);
+    public void recordGame(@PathParam("playerId") String id, @QueryParam("place") int place, @HeaderParam("Authorization") String token);
 
 }

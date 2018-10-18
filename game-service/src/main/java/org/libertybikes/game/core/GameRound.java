@@ -283,7 +283,7 @@ public class GameRound implements Runnable {
         for (Player p : playerRanks) {
             log("Player " + p.name + " came in place " + rank);
             if (p.isRealPlayer()) {
-                playerSvc.recordGame(p.id, rank);
+                playerSvc.recordGame(p.id, rank, "Bearer " + createJWT());
             }
             rank++;
         }

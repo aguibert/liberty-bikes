@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -61,6 +62,7 @@ public class RankingService {
     }
 
     @POST
+    @RolesAllowed("admin")
     @Path("/{playerId}")
     public void recordGame(@PathParam("playerId") String id, @QueryParam("place") int place) {
         recordGameInternal(id, place);
