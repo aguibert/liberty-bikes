@@ -9,9 +9,19 @@
         <feature>mpConfig-1.2</feature>
         <feature>mpJwt-1.0</feature>
         <feature>mpOpenAPI-1.0</feature>
+        <feature>jdbc-4.2</feature>
     </featureManager>
 
     <applicationManager autoExpand="true"/>
+    
+    <library id="derbyLib">
+        <fileset dir="derby"/>
+    </library>
+    
+    <dataSource id="DefaultDataSource">
+        <jdbcDriver libraryRef="derbyLib"/>
+        <properties.derby.embedded createDatabase="create" databaseName="memory:playerdb"/>
+    </dataSource>
     
     <sslDefault sslRef="RpSSLConfig" />  
     <ssl id="RpSSLConfig"
