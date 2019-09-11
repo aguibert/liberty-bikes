@@ -7,6 +7,7 @@ import static org.libertybikes.player.service.RankingService.ratingChange;
 import org.junit.Before;
 import org.junit.Test;
 import org.libertybikes.player.data.PlayerDB;
+import org.libertybikes.player.data.PlayerDBInMem;
 
 public class RankingServiceTest {
 
@@ -18,7 +19,7 @@ public class RankingServiceTest {
 
     @Before
     public void beforeEach() {
-        PlayerDB db = new PlayerDB();
+        PlayerDB db = new PlayerDBInMem();
         players = new PlayerService();
         players.db = db;
         ranks = new RankingService();

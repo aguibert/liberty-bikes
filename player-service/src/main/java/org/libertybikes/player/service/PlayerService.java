@@ -3,6 +3,7 @@ package org.libertybikes.player.service;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -38,6 +39,11 @@ public class PlayerService {
 
     @Inject
     private MetricRegistry registry;
+
+    @PostConstruct
+    public void dumpDB() {
+        System.out.println("@AGG got DB impl: " + db);
+    }
 
     private static final Metadata numLoginsCounter = new Metadata("num_player_logins", // name
                     "Number of Total Logins", // display name

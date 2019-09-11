@@ -1,10 +1,14 @@
 package org.libertybikes.player.service;
 
+import java.util.Objects;
+
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
+
+import org.bson.Document;
 
 public class Player {
 
@@ -73,6 +77,35 @@ public class Player {
     @Override
     public String toString() {
         return jsonb.toJson(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Player))
+            return false;
+        Player other = (Player) obj;
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public Document toDocument() {
+        Document doc = new Document();
+        doc.put("id", id);
+        doc.put("name", name);
+        doc.put("stats", stats);
+        return doc;
+    }
+
+    public static Player fromDocument(Document doc) {
+        if (doc == null)
+            return null;
+        Player p = new Player(doc.getString("name"), doc.getString("id"));
+        doc.get("stats", PlayerStats.class);
+        return p;
     }
 
 }

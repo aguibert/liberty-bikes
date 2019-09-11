@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo "Starting database"
+docker stop lb-mongodb 2> /dev/null
+docker run \
+  --name lb-mongodb \
+  --rm \
+  -d \
+  -p 27017:27017 \
+  mongo:4.2
+
 LOCAL_HOST=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
 echo "This hostname is: $LOCAL_HOST"
 
