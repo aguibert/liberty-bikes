@@ -1,7 +1,6 @@
 package org.libertybikes.player.service;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.metrics.Metadata;
 import org.eclipse.microprofile.metrics.MetadataBuilder;
 import org.eclipse.microprofile.metrics.MetricRegistry;
@@ -27,9 +25,6 @@ public class PlayerService {
 
     @Inject
     PlayerDB db;
-
-    @Inject
-    private JsonWebToken jwt;
 
     @GET
     public Collection<Player> getPlayers() {
@@ -81,21 +76,4 @@ public class PlayerService {
         return p;
     }
 
-    @GET
-    @Path("/getJWTInfo")
-    public HashMap<String, String> getJWTInfo() {
-
-        HashMap<String, String> map = new HashMap<String, String>();
-
-        String id = jwt.getClaim("id");
-        if (db.exists(id)) {
-            map.put("exists", "true");
-            map.put("username", db.get(id).name);
-
-        } else {
-            map.put("exists", "false");
-        }
-        map.put("id", id);
-        return map;
-    }
 }

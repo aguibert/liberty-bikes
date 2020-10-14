@@ -35,7 +35,11 @@ public class PersistentPlayerDB implements PlayerDB {
 
     public boolean isAvailable() {
         try (Connection con = ds.getConnection()) {
-            String CREATE_TABLE = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
+            try {
+                con.createStatement().execute("DELETE FROM " + TABLE_NAME);
+            } catch (SQLException e) {
+            }
+            String CREATE_TABLE = new StringBuilder("CREATE TABLE ")
                             .append(TABLE_NAME)
                             .append(" (")
                             .append(COL_ID)
@@ -57,7 +61,14 @@ public class PersistentPlayerDB implements PlayerDB {
             con.createStatement().execute(CREATE_TABLE);
             return true;
         } catch (SQLException notConfigured) {
+            if (notConfigured.getErrorCode() == 2714) {
+                System.out.println("DB already exists");
+                return true;
+            }
             System.err.println("Unable to initialize database because of: " + notConfigured.getMessage());
+            notConfigured.printStackTrace();
+            System.out.println("  sqlcode=" + notConfigured.getErrorCode());
+            System.out.println("  state=" + notConfigured.getSQLState());
             return false;
         }
     }
@@ -156,11 +167,10 @@ public class PersistentPlayerDB implements PlayerDB {
     @Override
     public boolean exists(String id) {
         try (Connection con = ds.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT EXISTS (" +
-                                                        "SELECT 1 FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ? )");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ?");
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
-            return rs.next() && rs.getBoolean(1);
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
